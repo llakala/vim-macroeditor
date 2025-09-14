@@ -1,5 +1,6 @@
 function! YankToRegister()
-  exe printf('norm! ^"%sy$', b:registername)
+  let contents = getline(".")
+  call setreg(b:registername, v:lua.vim.api.nvim_replace_termcodes(contents, 1, 0, 1))
 endfunction
 
 function! OpenMacroEditorWindow(registername)
@@ -16,7 +17,8 @@ function! OpenMacroEditorWindow(registername)
   execute height 'new ' name
   let b:registername = a:registername
   setlocal bufhidden=wipe noswapfile nobuflisted
-  exe printf('norm! "%sp', b:registername)
+  let contents = keytrans(getreg(b:registername))
+  exe setline(".", contents)
   set nomodified
   augroup MacroEditor
     au!
